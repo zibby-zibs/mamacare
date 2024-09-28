@@ -14,13 +14,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={` antialiased`}>
-        <div className="grid h-svh max-h-svh w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-y-hidden">
+        <div className="grid h-svh max-h-svh w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr] overflow-hidden">
           <div>
             <UserSidebar />
           </div>
-          <div className="max-h-svh overflow-y-auto overflow-x-hidden">
-            {children}
-          </div>
+          <div className="max-h-svh ">{children}</div>
         </div>
       </body>
     </html>

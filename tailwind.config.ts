@@ -14,6 +14,7 @@ const config: Config = {
         pacifico: ["Pacifico", "cursive"],
         outfit: ["Outfit", "sans-serif"],
         monoton: ["Monoton", "cursive"],
+        fret: ["'Brannboll Fet'", "san-serif"],
       },
       colors: {
         background: "hsl(var(--background))",
@@ -65,6 +66,6 @@ const config: Config = {
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("tailwind-scrollbar")],
 };
 export default config;

@@ -1,3 +1,5 @@
+@import url("https://fonts.cdnfonts.com/css/brannboll-fet");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -81,6 +83,6 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground overflow-hidden;
   }
 }
