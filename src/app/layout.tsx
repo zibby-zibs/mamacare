@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Outfit, Poppins, Pacifico, Monoton } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "@/components/ui/sonner";
+import ReactQueryWrapper from "@/hooks/react-query-wrapper";
 
 export const metadata: Metadata = {
   title: "Mama Care",
@@ -37,7 +39,10 @@ export default function RootLayout({
       <body
         className={`${outfit.className} ${poppins.className} ${pacifico.className} ${monoton.className} antialiased !font-poppins`}
       >
-        {children}
+        <ReactQueryWrapper>
+          {children}
+          <Toaster />
+        </ReactQueryWrapper>
       </body>
     </html>
   );

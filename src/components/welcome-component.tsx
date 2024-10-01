@@ -24,10 +24,10 @@ const Welcome = () => {
   const handleSignUp = () => {
     switch (userType) {
       case "patient":
-        window.location.href = "/user-dashboard";
+        window.location.href = "auth/sign-up";
         break;
       case "medical":
-        window.location.href = "/medical-professional";
+        window.location.href = "/medical-professional/auth/register";
         break;
       case "admin":
         window.location.href = "/admin/sign-up";

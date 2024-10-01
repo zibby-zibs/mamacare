@@ -1,13 +1,13 @@
 import React from "react";
-import SignupPage from "./_components/page-form";
+import SignupPage from "../../_components/register";
 
 type Props = {};
 
 const page = (props: Props) => {
   return (
-    <main>
+    <div>
       <SignupPage />
-    </main>
+    </div>
   );
 };
 

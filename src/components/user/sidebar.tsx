@@ -1,15 +1,25 @@
 "use client";
 
-import { Bell, Home, Menu, MessageCirclePlus, UserCircle } from "lucide-react";
+import {
+  Bell,
+  Home,
+  LucideLogOut,
+  Menu,
+  MessageCirclePlus,
+  UserCircle,
+} from "lucide-react";
 import Link from "next/link";
 import React from "react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useAuthStore } from "@/store/user";
 
 const UserSidebar = () => {
+  const router = useRouter();
   const pathname = usePathname();
+  const logout = useAuthStore((state) => state.logout);
   const links = [
     {
       title: "Dashboard",
@@ -59,6 +69,19 @@ const UserSidebar = () => {
                   {link.title}
                 </Link>
               ))}
+            </nav>
+            <nav className="px-2">
+              <Button
+                variant={"destructive"}
+                className="mt-9"
+                onClick={() => {
+                  logout();
+                  router.push("/auth/login");
+                }}
+              >
+                <LucideLogOut />
+                Logout
+              </Button>
             </nav>
           </div>
         </div>

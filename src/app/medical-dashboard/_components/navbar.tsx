@@ -25,22 +25,22 @@ function Navbar() {
     {
       id: 1,
       title: "Dashboard",
-      href: "/medical-dashbaord",
+      href: "/medical-dashboard",
     },
     {
       id: 2,
       title: "Requests",
-      href: "/medical-dashbaord/requests",
+      href: "/medical-dashboard/requests",
     },
     {
       id: 3,
       title: "Messages",
-      href: "/medical-dashbaord/messages",
+      href: "/medical-dashboard/messages",
     },
     {
       id: 4,
       title: "Appointments",
-      href: "/medical-dashbaord/appointments",
+      href: "/medical-dashboard/appointments",
     },
   ];
   return (

@@ -43,7 +43,7 @@ import {
 import NaijaStates from "naija-state-local-government";
 import { Calendar } from "@/components/ui/calendar";
 import { formatDate } from "date-fns";
-import { useSignIn } from "@/hooks/user";
+import { useSignIn, useSignUp } from "@/hooks/doctor";
 
 const carouselImages = [
   pregnant_womaan_one,
@@ -54,6 +54,7 @@ const carouselImages = [
 
 const SignupPage = () => {
   const [currentImage, setCurrentImage] = useState(0);
+  const [selectedState, setSelectedState] = useState("");
   const { isPending, mutateAsync } = useSignIn();
 
   useEffect(() => {
@@ -91,11 +92,11 @@ const SignupPage = () => {
   return (
     <div className="w-full lg:grid lg:grid-cols-2 !max-h-svh min-h-svh overflow-hidden">
       <div className="py-12 flex items-center justify-center overflow-y-auto min-h-[calc(100svh-50px)] max-h-[calc(100svh-50px)] scrollbar-none">
-        <div className="mx-auto grid w-[520px] gap-6">
+        <div className="mx-auto grid max-w-[520px] gap-6 w-full">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Sign In</h1>
+            <h1 className="text-3xl font-bold">Login</h1>
             <p className="text-balance text-muted-foreground">
-              Login to access the best pregnancy care
+              Login to access your account
             </p>
           </div>
           <Form {...form}>
@@ -132,7 +133,7 @@ const SignupPage = () => {
                 className="w-full gap-2"
                 disabled={isPending}
               >
-                <p>Register</p>
+                <p>Login</p>
                 {isPending ? <Loader className="animate-spin " /> : null}
               </Button>
             </form>
@@ -140,8 +141,11 @@ const SignupPage = () => {
 
           <div className="mt-4 text-center text-sm">
             Don&apos;t have an account?{" "}
-            <Link href="/auth/sign-up" className="text-primary hover:underline">
-              Sign Up
+            <Link
+              href="/medical-dashboard/auth/register"
+              className="text-primary hover:underline"
+            >
+              Sign up
             </Link>
           </div>
         </div>

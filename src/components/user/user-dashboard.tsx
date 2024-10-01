@@ -18,43 +18,71 @@ import {
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 
-import { user } from "@/lib/user";
-
 import Image from "next/image";
+import { useAuthStore } from "@/store/user";
+import { User } from "lucide-react";
+import { format } from "date-fns";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const description = "User pregnancy dashboard";
+const PREGNANCY_DURATION_DAYS = 280; // 40 weeks in days
 
 export function UserDashboard() {
-  function calculateDueDate(weeksPregnant: number, daysPregnant = 0) {
+  const user = useAuthStore((state) => state.user);
+
+  function calculatePregnancyProgress(expectedDate: string) {
     const today = new Date();
-    const totalDaysPregnant = weeksPregnant * 7 + daysPregnant;
-    const daysUntilDue = 280 - totalDaysPregnant; // 280 days is the average pregnancy duration
-    const dueDate = new Date(
-      today.getTime() + daysUntilDue * 24 * 60 * 60 * 1000
+    const deliveryDate = new Date(expectedDate);
+    console.log(deliveryDate);
+
+    // Calculate total milliseconds between now and delivery date
+    const timeLeft = deliveryDate.getTime() - today.getTime();
+
+    // Convert to days
+    const daysLeft = Math.ceil(timeLeft / (1000 * 60 * 60 * 24));
+
+    console.log({ daysLeft });
+
+    // Calculate percentage
+    const percentageComplete = Math.min(
+      100,
+      Math.max(
+        0,
+        ((PREGNANCY_DURATION_DAYS - daysLeft) / PREGNANCY_DURATION_DAYS) * 100
+      )
     );
-    return dueDate;
+    console.log({
+      edd: user?.data?.expectedDeliveryDate,
+      percentageComplete: Math.round(percentageComplete),
+      deg: (percentageComplete / 100) * 360,
+    });
+
+    return {
+      daysLeft,
+      percentageComplete: Math.round(percentageComplete),
+      endDegrees: (Math.round(percentageComplete) / 100) * 360,
+    };
   }
-  const totalWeeks = 40;
-  const dueDate = calculateDueDate(user.weeksPregnant);
-  const weeksLeft = Math.max(0, totalWeeks - user.weeksPregnant);
 
-  const progressPercentage = (user.weeksPregnant / totalWeeks) * 100;
+  const endAngleDegrees = user?.data?.expectedDeliveryDate
+    ? calculatePregnancyProgress(user?.data?.expectedDeliveryDate).endDegrees
+    : 0;
 
-  const endAngleDegrees = (progressPercentage / 100) * 360;
+  console.log({ deg: endAngleDegrees });
   const chartData = [
     {
       name: "Weeks Left",
-      value: progressPercentage,
+      value: user?.data?.expectedDeliveryDate
+        ? Number(calculatePregnancyProgress(user?.data?.expectedDeliveryDate))
+        : 0,
+      fill: "#000000",
     },
   ];
 
   const chartConfig = {
-    visitors: {
-      label: "Months Gone",
-    },
-    safari: {
-      label: "Safari",
-      color: "hsl(var(--chart-2))",
+    value: {
+      label: "Progress",
+      color: "hsl(var(--primary))",
     },
   } satisfies ChartConfig;
   return (
@@ -66,16 +94,29 @@ export function UserDashboard() {
         >
           <CardHeader className="pb-2">
             <div className="mx-auto w-fit">
-              <Image
-                src={user.image}
-                alt="User Image"
-                width={50}
-                height={50}
-                className="rounded-full object-contain"
-              />
+              {user?.data.image ? (
+                <Image
+                  src={user?.data?.image}
+                  alt="User Image"
+                  width={50}
+                  height={50}
+                  className="rounded-full object-contain"
+                />
+              ) : (
+                <Avatar className="h-auto w-auto p-2">
+                  <AvatarImage
+                    src={user?.data?.image as string | undefined}
+                    alt="User Image"
+                  />
+                  <AvatarFallback className="uppercase text-2xl p-2 font-medium">
+                    {user?.data?.first_name?.charAt(0)}
+                    {user?.data?.last_name?.charAt(0)}
+                  </AvatarFallback>
+                </Avatar>
+              )}
             </div>
             <CardTitle className="text-2xl text-center my-2">
-              Welcome {user.first_name} {user.last_name}
+              Welcome {user?.data?.first_name} {user?.data?.last_name}
             </CardTitle>
           </CardHeader>
           <CardContent className="mt-auto">
@@ -83,15 +124,15 @@ export function UserDashboard() {
             <div className="font-outfit text-center space-y-1">
               <p>
                 <span>phone: </span>
-                {user.phone_number}
+                {user?.data?.phone_number}
               </p>
               <p>
                 <span>state: </span>
-                {user.state}
+                {user?.data?.state}
               </p>
               <p>
                 <span>LGA: </span>
-                {user.lga}
+                {user?.data?.lga}
               </p>
             </div>
           </CardContent>
@@ -119,6 +160,7 @@ export function UserDashboard() {
                 endAngle={0}
                 innerRadius={80}
                 outerRadius={140}
+                className=""
               >
                 <PolarGrid
                   gridType="circle"
@@ -126,8 +168,14 @@ export function UserDashboard() {
                   stroke="none"
                   className="first:fill-muted last:fill-background"
                   polarRadius={[86, 74]}
+                  color="black"
                 />
-                <RadialBar dataKey="value" background />
+                <RadialBar
+                  dataKey="value"
+                  background
+                  fill="black" // Change this to black
+                  className="bg-black fill-black"
+                />
                 <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                   <Label
                     content={({ viewBox }) => {
@@ -144,7 +192,9 @@ export function UserDashboard() {
                               y={viewBox.cy}
                               className="fill-foreground text-4xl font-bold"
                             >
-                              {weeksLeft}
+                              {calculatePregnancyProgress(
+                                user?.data?.expectedDeliveryDate
+                              ).daysLeft ?? 0}
                             </tspan>
                             <tspan
                               x={viewBox.cx}
@@ -167,7 +217,8 @@ export function UserDashboard() {
               Congratulations in advance, remember to take care of your health.
             </div> */}
             <div className="leading-none text-muted-foreground font-bold">
-              Due date: {dueDate.toDateString()}
+              Due date:{" "}
+              {format(user?.data?.expectedDeliveryDate, "MMM dd, yyyy")}
             </div>
           </CardFooter>
         </Card>
