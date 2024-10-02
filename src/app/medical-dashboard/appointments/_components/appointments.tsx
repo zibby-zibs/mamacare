@@ -4,7 +4,22 @@ import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Clock, User } from "lucide-react";
+import {
+  Calendar,
+  CheckIcon,
+  Clock,
+  Loader2,
+  MessageCircle,
+  User,
+} from "lucide-react";
+import {
+  useAcceptAppointment,
+  useGetAppointments,
+  useGetRecentAppointments,
+  useRejectAppointment,
+} from "@/hooks/doctor";
+import { Skeleton } from "@/components/ui/skeleton";
+import { format, parseISO } from "date-fns";
 
 interface Appointment {
   id: string;
@@ -53,51 +68,105 @@ const initialAppointments: Appointment[] = [
 ];
 
 export default function AppointmentsList() {
-  const [appointments, setAppointments] =
-    useState<Appointment[]>(initialAppointments);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const { data, isPending } = useGetAppointments();
+  const { mutateAsync, isPending: isRejecting } =
+    useRejectAppointment(selectedId);
+  const { mutateAsync: acceptAppointment, isPending: isAccepting } =
+    useAcceptAppointment(selectedId);
 
-  const handleCancelAppointment = (id: string) => {
-    setAppointments(
-      appointments.filter((appointment) => appointment.id !== id)
-    );
-    // In a real application, you would also make an API call to update the backend
+  const handleCancelAppointment = async () => {
+    await mutateAsync();
+  };
+
+  const handleAcceptAppointment = async () => {
+    await acceptAppointment();
   };
 
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {appointments.map((appointment) => (
-        <Card key={appointment.id}>
-          <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-              <span>{appointment.patientName}</span>
-              <Badge variant="outline">{appointment.type}</Badge>
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Calendar className="mr-2 h-4 w-4" />
-                <span>{appointment.date}</span>
-              </div>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <Clock className="mr-2 h-4 w-4" />
-                <span>{appointment.time}</span>
-              </div>
-              <div className="flex items-center text-sm text-muted-foreground">
-                <User className="mr-2 h-4 w-4" />
-                <span>{appointment.patientName}</span>
-              </div>
-              <Button
-                variant="destructive"
-                className="w-full mt-4"
-                onClick={() => handleCancelAppointment(appointment.id)}
-              >
-                Cancel Appointment
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+    <>
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {!isPending &&
+          data?.data?.map((appointment) => (
+            <Card key={appointment.id}>
+              <CardHeader>
+                <CardTitle className="flex justify-between items-center">
+                  <span>
+                    {appointment.user.first_name} {appointment.user.last_name}
+                  </span>
+                  {/* <Badge variant="outline">{appointment.type}</Badge> */}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-2">
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <Calendar className="mr-2 h-4 w-4" />
+                    <span>
+                      {format(
+                        parseISO(appointment.date),
+                        "MMMM d, yyyy h:mm a"
+                      )}
+                    </span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    <span>{appointment.description}</span>
+                  </div>
+                  <div className="flex items-center text-sm text-muted-foreground">
+                    <User className="mr-2 h-4 w-4" />
+                    <span>
+                      {appointment.user.first_name} {appointment.user.last_name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 ">
+                    <Button
+                      disabled={appointment.status === "ACCEPTED"}
+                      className="w-full mt-4"
+                      onClick={() => {
+                        setSelectedId(appointment.id);
+                        handleAcceptAppointment();
+                      }}
+                    >
+                      {appointment.status === "ACCEPTED" ? (
+                        <CheckIcon />
+                      ) : (
+                        "Accept Appointment"
+                      )}
+                      {isAccepting && <Loader2 className="animate-spin" />}
+                    </Button>
+                    <Button
+                      variant="destructive"
+                      className="w-full mt-4"
+                      onClick={() => {
+                        setSelectedId(appointment.id);
+                        handleCancelAppointment();
+                      }}
+                    >
+                      Cancel Appointment
+                      {isRejecting && <Loader2 className="animate-spin" />}
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+
+        {data?.data.length === 0 && (
+          <div className="col-span-full text-center text-muted-foreground">
+            No appointments found
+          </div>
+        )}
+      </div>
+      {isPending && (
+        <div className="flex flex-wrap justify-center items-center gap-3 w-full">
+          <Skeleton className="w-[70vw] md:w-[45vw] lg:w-[30vw] h-[220px]" />
+          <Skeleton className="w-[70vw] md:w-[45vw] lg:w-[30vw] h-[220px]" />
+          <Skeleton className="w-[70vw] md:w-[45vw] lg:w-[30vw] h-[220px]" />
+          <Skeleton className="w-[70vw] md:w-[45vw] lg:w-[30vw] h-[220px]" />
+          <Skeleton className="w-[70vw] md:w-[45vw] lg:w-[30vw] h-[220px]" />
+          <Skeleton className="w-[70vw] md:w-[45vw] lg:w-[30vw] h-[220px]" />
+        </div>
+      )}
+    </>
   );
 }

@@ -1,17 +1,24 @@
 import { Download, FileText } from "lucide-react";
 import React from "react";
+import { Message } from "../../../../../types";
+import { format } from "date-fns";
 
 type Props = {
-  message: {
-    sender: string;
-    content: string;
-    timestamp: string;
-    type: string;
-  };
+  message: Message;
   isCurrentUser: boolean;
 };
 
 const MessageBubble = ({ message, isCurrentUser }: Props) => {
+  const formatMessageDate = (timestamp: number) => {
+    const date = new Date(timestamp * 1000);
+    const today = new Date();
+
+    if (date.toDateString() === today.toDateString()) {
+      return format(date, "hh:mm a");
+    } else {
+      return format(date, "MMM d, hh:mm a");
+    }
+  };
   return (
     <div
       className={`flex ${isCurrentUser ? "justify-end" : "justify-start"} mb-4`}
@@ -24,25 +31,24 @@ const MessageBubble = ({ message, isCurrentUser }: Props) => {
         } rounded-lg p-3 shadow`}
       >
         {!isCurrentUser && (
-          <p className="text-xs text-[#9370DB] mb-1">{message.sender}</p>
+          <p className="text-xs text-[#9370DB] mb-1">{message.name}</p>
         )}
-        {message.type === "text" ? (
-          <p>{message.content}</p>
-        ) : (
-          <div className="flex items-center">
-            <FileText className="mr-2" size={20} />
-            <span className="mr-2">{message.content}</span>
-            <Download
-              size={20}
-              className="cursor-pointer hover:text-[#9370DB]"
-            />
-          </div>
-        )}
+
+        <p>{message.text}</p>
+
+        {/* <div className="flex items-center">
+             <FileText className="mr-2" size={20} />
+             <span className="mr-2">{message.text}</span>
+             <Download
+               size={20}
+               className="cursor-pointer hover:text-[#9370DB]"
+             />
+         </div> */}
+
         <p className="text-xs text-right mt-1 text-[#9370DB]">
-          {new Date(message.timestamp).toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-          })}
+          {message?.createdAt?.Timestamp?.seconds
+            ? formatMessageDate(message?.createdAt?.Timestamp?.seconds)
+            : ""}
         </p>
       </div>
     </div>

@@ -2,12 +2,21 @@ import {
   DoctorRegistrationformSchema,
   UserLoginformSchema,
 } from "@/lib/schemas";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/user";
+import { Appointment, Metric, Request, User } from "../../../types";
+import {
+  addDoc,
+  collection,
+  doc,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../../../firebase-config";
 
 export const useSignUp = () => {
   const router = useRouter();
@@ -51,6 +60,191 @@ export const useSignIn = () => {
       toast.success("Welcome back!");
       setUser(data);
       return router.push("/medical-dashboard");
+    },
+  });
+};
+
+//requests
+export const useAcceptRequests = (
+  id: string | undefined,
+  toId: string | string
+) => {
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["accept-request"],
+    mutationFn: async (data: {
+      doctorId: string | undefined;
+      status: "ACCEPTED" | "REJECTED";
+    }) => {
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/medic/accept-request/${id}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data;
+    },
+    onSuccess: async (data) => {
+      const messageRef = collection(db, "messages", id!, "chat");
+      try {
+        await addDoc(messageRef, {
+          text: `Hi, my name is ${user?.data?.first_name} ${user?.data?.last_name}, I am your doctor`,
+          name: `${user?.data?.first_name} ${user?.data?.last_name}`,
+          userId: user?.data?.id,
+          type: "text",
+          to: toId,
+          createdAt: serverTimestamp(),
+        });
+      } catch (error) {
+        console.log("Error sending message", error);
+      }
+      toast.success("Request accepted, you can start a conversation");
+      queryClient.invalidateQueries({
+        queryKey: ["recent-appointments", "all-appointments"],
+      });
+    },
+  });
+};
+
+export const useGetRecentAppointments = () => {
+  const user = useAuthStore((state) => state.user);
+  return useQuery({
+    queryKey: ["recent-appointments"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/medic/appointments/recent/${user?.data?.doctorId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data as Appointment;
+    },
+  });
+};
+
+export const useGetAppointments = () => {
+  const user = useAuthStore((state) => state.user);
+  return useQuery({
+    queryKey: ["all-appointments"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/medic/appointments/${user?.data?.doctorId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data as Appointment;
+    },
+  });
+};
+
+export const useGetRequests = () => {
+  const user = useAuthStore((state) => state.user);
+  return useQuery({
+    queryKey: ["all-requests"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/medic/requests`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data as Request;
+    },
+  });
+};
+
+export const useGetMetrics = (id: string | undefined) => {
+  const user = useAuthStore((state) => state.user);
+  return useQuery({
+    queryKey: ["doctor-metrics"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/medic/${id}/metrics`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data as Metric;
+    },
+  });
+};
+
+export const useAcceptAppointment = (appointmentId: string | null) => {
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["accept-appointment"],
+    mutationFn: async () => {
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/medic/accept-appointment/${appointmentId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data as Appointment;
+    },
+    onSuccess: () => {
+      toast.success("Appointment accepted!");
+      queryClient.invalidateQueries({
+        queryKey: ["all-requests"],
+      });
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
+      console.log("Error accepting appointment", error);
+    },
+  });
+};
+
+export const useRejectAppointment = (appointmentId: string | null) => {
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["reject-appointment"],
+    mutationFn: async () => {
+      const response = await axios.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/medic/reject-appointment/${appointmentId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data as Appointment;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["all-requests"],
+      });
+      toast.success("Appointment rejected");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
+      console.log("Error rejecting appointment", error);
     },
   });
 };

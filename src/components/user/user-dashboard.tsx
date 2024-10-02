@@ -218,7 +218,7 @@ export function UserDashboard() {
             </div> */}
             <div className="leading-none text-muted-foreground font-bold">
               Due date:{" "}
-              {format(user?.data?.expectedDeliveryDate, "MMM dd, yyyy")}
+              {/* {format(user?.data?.expectedDeliveryDate, "MMM dd, yyyy")} */}
             </div>
           </CardFooter>
         </Card>

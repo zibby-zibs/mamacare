@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/tooltip";
 import { CornerDownLeft, Mic, Paperclip } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import MessageBubble from "./message-bubble";
+
 import {
   addDoc,
   collection,
@@ -23,12 +23,14 @@ import {
   serverTimestamp,
   setDoc,
 } from "firebase/firestore";
-import { useAuthStore, useExtraUser } from "@/store/user";
+import { useAuthStore } from "@/store/user";
 import { db } from "../../../../../firebase-config";
 import { toast } from "sonner";
 import { Message } from "../../../../../types";
 import { useGetUserRequests } from "@/hooks/user";
 import { useFirebaseMessages } from "@/hooks/realtime-user";
+import MessageBubble from "@/app/user-dashboard/messaging/_components/message-bubble";
+import { useMessageStore } from "@/store/doctor";
 
 type Props = {
   message: {
@@ -40,6 +42,7 @@ type Props = {
 };
 
 const ChatInterface = ({}: Props) => {
+  const selectedUser = useMessageStore((store) => store.user);
   const user = useAuthStore((store) => store.user);
   const { data, isError, error } = useGetUserRequests(user?.data?.id);
   const [text, setText] = useState("");
@@ -47,15 +50,15 @@ const ChatInterface = ({}: Props) => {
   const requestId = data?.data?.find(
     (request: any) => request.status === "ACCEPTED"
   )?.id;
-  const { data: messages } = useFirebaseMessages(requestId!);
+  const { data: messages } = useFirebaseMessages(selectedUser?.id);
 
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!requestId || !text || !user?.data?.id) return;
+    if (!selectedUser?.id || !text || !user?.data?.id) return;
 
     try {
       // Reference to the subcollection 'chat' within the request document
-      const chatRef = collection(db, "messages", requestId, "chat");
+      const chatRef = collection(db, "messages", selectedUser?.id, "chat");
 
       // Add a new document to the subcollection
       await addDoc(chatRef, {
@@ -71,17 +74,6 @@ const ChatInterface = ({}: Props) => {
       toast.error("Failed to send message");
     }
   };
-
-  useEffect(() => {
-    if (data && messages) {
-      const doctorId = data?.data?.find(
-        (request: any) => request.status === "ACCEPTED"
-      )?.doctorId;
-      if (doctorId) {
-        useExtraUser.setState({ doctorId });
-      }
-    }
-  }, [messages]);
 
   // useEffect(() => {
   //   if (!requestId) return;
@@ -104,7 +96,7 @@ const ChatInterface = ({}: Props) => {
 
   return (
     <TooltipProvider>
-      <div className="relative z-10 flex h-svh max-h-[calc(100svh-132px)] flex-col rounded-xl bg-white p-4 lg:col-span-2 overflow-y-hidden max-w-screen-lg mx-auto  justify-between ">
+      <div className="relative z-10 flex h-svh max-h-[calc(100svh-132px)] flex-col rounded-xl bg-white p-4 lg:col-span-2 overflow-y-hidden max-w-screen-md mx-auto  justify-between ">
         {/* <Badge variant="outline" className="absolute right-3 top-3">
         Output
       </Badge> */}
@@ -118,7 +110,7 @@ const ChatInterface = ({}: Props) => {
           ))}
         </div>
         <form
-          className=" overflow-hidden rounded-lg border bg-white focus-within:ring-1 focus-within:ring-ring mb-5 sticky bottom-2 w-full max-w-screen-lg z-30"
+          className=" overflow-hidden rounded-lg border bg-white focus-within:ring-1 focus-within:ring-ring mb-5 sticky bottom-2 w-full max-w-screen-md z-30"
           x-chunk="dashboard-03-chunk-1"
           onSubmit={sendMessage}
         >
@@ -131,7 +123,7 @@ const ChatInterface = ({}: Props) => {
             className="min-h-12 resize-none border-0 p-3 shadow-none focus-visible:ring-0"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            disabled={!requestId}
+            disabled={!selectedUser?.id}
           />
           <div className="flex items-center p-3 pt-0">
             <Tooltip>

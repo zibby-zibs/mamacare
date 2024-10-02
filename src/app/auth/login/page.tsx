@@ -39,10 +39,6 @@ import {
   UserRegistrationformSchema,
   userProfileSchema,
 } from "@/lib/schemas";
-
-import NaijaStates from "naija-state-local-government";
-import { Calendar } from "@/components/ui/calendar";
-import { formatDate } from "date-fns";
 import { useSignIn } from "@/hooks/user";
 
 const carouselImages = [
@@ -132,7 +128,7 @@ const SignupPage = () => {
                 className="w-full gap-2"
                 disabled={isPending}
               >
-                <p>Register</p>
+                <p>Login</p>
                 {isPending ? <Loader className="animate-spin " /> : null}
               </Button>
             </form>

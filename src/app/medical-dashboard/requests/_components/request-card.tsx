@@ -12,13 +12,11 @@ import {
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
+import { Request } from "../../../../../types";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 interface DoctorRequestProps {
-  request: {
-    name: string;
-    message: string;
-    image: StaticImageData;
-  };
+  request: Request["data"][0];
 }
 
 export default function RequestCard({ request }: DoctorRequestProps) {
@@ -32,23 +30,41 @@ export default function RequestCard({ request }: DoctorRequestProps) {
   return (
     <Card className="w-[300px]">
       <CardHeader className="flex flex-col items-center gap-4">
-        <Image
-          src={request.image}
-          alt={request.name}
-          height={48}
-          width={48}
-          className="rounded-full mx-auto object-contain"
-        />
+        {request.user.image ? (
+          <Image
+            src={request.user.image}
+            alt={request.user.first_name}
+            height={48}
+            width={48}
+            className="rounded-full mx-auto object-contain"
+          />
+        ) : (
+          <Avatar className="h-12 w-12">
+            <AvatarFallback>
+              {request.user.first_name.slice(0, 2).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+        )}
+        {/* <Avatar className="h-12 w-12">
+          <AvatarImage src={request.image} alt={request.name} />
+          <AvatarFallback>
+            {request.name.slice(0, 2).toUpperCase()}
+          </AvatarFallback>
+        )}
         {/* <Avatar className="h-12 w-12">
           <AvatarImage src={request.image} alt={request.name} />
           <AvatarFallback>
             {request.name.slice(0, 2).toUpperCase()}
           </AvatarFallback>
         </Avatar> */}
-        <CardTitle className="text-center">{request.name}</CardTitle>
+        <CardTitle className="text-center">
+          {request.user.first_name} {request.user.last_name}
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-muted-foreground">{request.message}</p>
+        <p className="text-muted-foreground text-center">
+          {request.description}
+        </p>
       </CardContent>
       <CardFooter>
         <Button

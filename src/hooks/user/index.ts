@@ -3,12 +3,13 @@ import {
   UserRegistrationformSchema,
   userProfileSchema,
 } from "@/lib/schemas";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/user";
+import { Request, User } from "../../../types";
 
 export const useSignUp = () => {
   const router = useRouter();
@@ -51,7 +52,7 @@ export const useSignIn = () => {
     onSuccess: (data) => {
       toast.success("Welcome to mamacare, your guide to a successful delivery");
       setUser(data);
-      return router.push("/medical-dashboard");
+      return router.push("/user-dashboard");
     },
   });
 };
@@ -109,6 +110,56 @@ export const useRequestDoctor = (id: string | undefined) => {
     onError: (error: any) => {
       toast.error(error?.response?.data?.message ?? "Something went wrong");
       console.log(error);
+    },
+  });
+};
+
+export const useCreateAppointment = (id: string | undefined) => {
+  const user = useAuthStore((state) => state.user);
+  return useMutation({
+    mutationKey: ["create-appointment-user"],
+    mutationFn: async (data: {
+      description: string;
+      doctorId: string;
+      date: Date;
+    }) => {
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/${id}/create-appointment`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data;
+    },
+    onSuccess: (data) => {
+      toast.success("An appointment has been scheduled with your doctor!");
+    },
+    onError: (error: any) => {
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
+      console.log(error);
+    },
+  });
+};
+
+export const useGetUserRequests = (id: string | undefined) => {
+  const user = useAuthStore((state) => state.user);
+  return useQuery({
+    queryKey: ["get-user-requests"],
+    queryFn: async () => {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/user/${id}/requests`,
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data as Request;
     },
   });
 };

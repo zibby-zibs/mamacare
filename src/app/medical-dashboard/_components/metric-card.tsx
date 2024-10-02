@@ -1,14 +1,16 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useGetMetrics } from "@/hooks/doctor";
 import { useAuthStore } from "@/store/user";
-import { Activity, CreditCard, DollarSign, Users } from "lucide-react";
+import { Activity, CreditCard, DollarSign, Loader2, Users } from "lucide-react";
 import React from "react";
 
 type Props = {};
 
 const MetricCard = (props: Props) => {
   const user = useAuthStore((state) => state.user);
+  const { data, isPending } = useGetMetrics(user?.data?.doctorId);
   return (
     <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
       <Card x-chunk="dashboard-01-chunk-3">
@@ -31,7 +33,10 @@ const MetricCard = (props: Props) => {
           <DollarSign className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">26</div>
+          <div className="text-2xl font-bold">
+            {data?.data?.newRequests}{" "}
+            {isPending && <Loader2 className="animate-spin" />}{" "}
+          </div>
           {/* <p className="text-xs text-muted-foreground">
               +20.1% from last month
             </p> */}
@@ -45,7 +50,10 @@ const MetricCard = (props: Props) => {
           <Users className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">3</div>
+          <div className="text-2xl font-bold">
+            {data?.data?.unapprovedAppointments}{" "}
+            {isPending && <Loader2 className="animate-spin" />}
+          </div>
           {/* <p className="text-xs text-muted-foreground">
               +180.1% from last month
             </p> */}
@@ -57,7 +65,10 @@ const MetricCard = (props: Props) => {
           <CreditCard className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">2</div>
+          <div className="text-2xl font-bold">
+            {data?.data?.engagedWomen}{" "}
+            {isPending && <Loader2 className="animate-spin" />}{" "}
+          </div>
           {/* <p className="text-xs text-muted-foreground">
               +19% from last month
             </p> */}

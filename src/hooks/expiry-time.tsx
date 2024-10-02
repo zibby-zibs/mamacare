@@ -15,6 +15,10 @@ export const useTokenExpiryCheck = () => {
             logout();
             router.push("/auth/login");
           }
+          if (user?.data?.role === "PRACTITIONER") {
+            logout();
+            router.push("/medical-dashboard/auth/login");
+          }
         }
       }
     };

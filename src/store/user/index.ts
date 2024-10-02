@@ -2,12 +2,17 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import Cookies from "js-cookie";
 import { user } from "@/lib/user";
+import { User, UserData } from "../../../types";
 
 interface UserStore {
   user: User | null;
   setUser: (user: User | null) => void;
   updateUser: (user: UserData) => void;
   logout: () => void;
+}
+
+interface UserExtraState {
+  doctorId: string | null | undefined;
 }
 
 export const useAuthStore = create<UserStore>()(
@@ -52,3 +57,7 @@ export const useAuthStore = create<UserStore>()(
     }
   )
 );
+
+export const useExtraUser = create<UserExtraState>((set) => ({
+  doctorId: undefined,
+}));

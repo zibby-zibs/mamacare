@@ -2,11 +2,25 @@
 
 import { Menu, UserCircle } from "lucide-react";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-// import { cn } from "@/lib/utils";
+import {
+  addDoc,
+  collection,
+  limit,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+  where,
+} from "firebase/firestore";
 import Image, { StaticImageData } from "next/image";
+import { db } from "../../../../../firebase-config";
+import { useAuthStore } from "@/store/user";
+import { Message } from "../../../../../types";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useMessageStore } from "@/store/doctor";
 
 type Props = {
   messageList: {
@@ -18,6 +32,46 @@ type Props = {
 };
 
 const UserList = ({ messageList }: Props) => {
+  const user = useAuthStore((store) => store.user);
+  const selectedUser = useMessageStore((store) => store.user);
+  const [messages, setMessages] = useState([] as Message[]);
+
+  useEffect(() => {
+    const q = query(
+      collection(db, "messages"),
+      orderBy("createdAt", "desc"),
+      limit(50)
+    );
+    const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
+      const fetchedMessages: any[] = [];
+      QuerySnapshot.forEach((doc) => {
+        fetchedMessages.push({ ...doc.data(), id: doc.id });
+      });
+      const sortedMessages = fetchedMessages.sort(
+        (a, b) => a.createdAt - b.createdAt
+      );
+      // Create an array to hold unique conversations
+      const uniqueConversations: Message[] = [];
+      // Create a Set to track seen IDs for efficiency
+      const seenIds = new Set();
+      sortedMessages.forEach((message) => {
+        if (!seenIds.has(message.id)) {
+          seenIds.add(message.id);
+          uniqueConversations.push(message);
+        }
+      });
+      setMessages(uniqueConversations);
+      console.log("Unique Conversations", uniqueConversations);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedUser) {
+      useMessageStore.setState({ user: messages[0] });
+    }
+  }, [messages]);
+
   return (
     <div>
       <div className="hidden border-r bg-muted/40 md:block h-svh">
@@ -35,13 +89,14 @@ const UserList = ({ messageList }: Props) => {
             </Button> */}
           </div>
           <div className="flex-1 flex flex-col gap-4 px-5 max-h-[calc(100svh-170px)] overflow-y-auto">
-            {messageList.map((message) => (
+            {messages.map((message) => (
               <div
                 key={message.id}
-                className="border-b border-b-gray-400 rounded-b-lg px-2"
+                className="hover:bg-gray-100"
+                onClick={() => useMessageStore.setState({ user: message })}
               >
                 <div className="flex items-center gap-2">
-                  {message.image ? (
+                  {/* {message.image ? (
                     <Image
                       src={message.image}
                       alt={message.name}
@@ -51,12 +106,15 @@ const UserList = ({ messageList }: Props) => {
                     />
                   ) : (
                     <UserCircle className="h-10 w-10" />
-                  )}
+                  )} */}
+                  <Avatar>
+                    <AvatarFallback>
+                      <p>{message.name.slice(0, 2)}</p>
+                    </AvatarFallback>
+                  </Avatar>
                   <h1 className="font-medium">{message.name}</h1>
                 </div>
-                <p className=" text-sm text-gray-500 pt-1">
-                  {message.lastMessage}
-                </p>
+                <p className=" text-sm text-gray-500 pt-1">{message.text}</p>
               </div>
             ))}
           </div>
@@ -77,23 +135,34 @@ const UserList = ({ messageList }: Props) => {
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
               <div className="flex-1 flex flex-col gap-4 max-h-[calc(100svh-100px)] overflow-y-auto">
-                {messageList.map((message) => (
-                  <div key={message.id}>
+                {messages.map((message) => (
+                  <div
+                    key={message.id}
+                    className="hover:bg-gray-100"
+                    onClick={() => useMessageStore.setState({ user: message })}
+                  >
                     <div className="flex items-center gap-2">
-                      {message.image ? (
-                        <Image
-                          src={message.image}
-                          alt={message.name}
-                          height={40}
-                          width={40}
-                          className="rounded-full object-contain"
-                        />
-                      ) : (
-                        <UserCircle className="h-10 w-10" />
-                      )}
+                      {/* {message.image ? (
+                    <Image
+                      src={message.image}
+                      alt={message.name}
+                      height={40}
+                      width={40}
+                      className="rounded-full object-contain"
+                    />
+                  ) : (
+                    <UserCircle className="h-10 w-10" />
+                  )} */}
+                      <Avatar>
+                        <AvatarFallback>
+                          <p>{message.name.slice(0, 2)}</p>
+                        </AvatarFallback>
+                      </Avatar>
                       <h1 className="font-medium">{message.name}</h1>
-                      <p className=" text-sm">{message.lastMessage}</p>
                     </div>
+                    <p className=" text-sm text-gray-500 pt-1">
+                      {message.text}
+                    </p>
                   </div>
                 ))}
               </div>

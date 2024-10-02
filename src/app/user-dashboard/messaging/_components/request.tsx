@@ -10,7 +10,7 @@ import {
 import { FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useRequestDoctor } from "@/hooks/user";
+import { useGetUserRequests, useRequestDoctor } from "@/hooks/user";
 import { useAuthStore } from "@/store/user";
 import { LucideLoader } from "lucide-react";
 import React, { useState } from "react";
@@ -21,14 +21,20 @@ const Request = (props: Props) => {
   const user = useAuthStore((state) => state.user);
   const { isPending, mutateAsync } = useRequestDoctor(user?.data?.id);
   const [description, setDescription] = useState("");
+  const { data, isError, error } = useGetUserRequests(user?.data?.id);
+  const requestId = data?.data?.find(
+    (request: any) => request.status === "ACCEPTED"
+  )?.id;
 
   const onSubmit = async () => {
     mutateAsync({ description });
   };
   return (
     <Dialog>
-      <DialogTrigger>
-        <Button className=" text-black">Request a doctor</Button>
+      <DialogTrigger disabled={!!requestId}>
+        <Button className=" text-white" disabled={!!requestId}>
+          Request a doctor
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
