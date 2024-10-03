@@ -1,12 +1,6 @@
 "use client";
 
-import { Metadata } from "next";
 import AppointmentsList from "./_components/appointments";
-
-export const metadata: Metadata = {
-  title: "Appointments | Doctor Dashboard",
-  description: "View and manage your upcoming appointments",
-};
 
 export default function AppointmentsPage() {
   return (
