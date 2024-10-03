@@ -69,6 +69,7 @@ export const useAcceptRequests = (
   id: string | undefined,
   toId: string | string
 ) => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   return useMutation({
@@ -107,6 +108,13 @@ export const useAcceptRequests = (
       queryClient.invalidateQueries({
         queryKey: ["recent-appointments", "all-appointments"],
       });
+    },
+    onError: (error: any) => {
+      if (error.response.status === 401) {
+        router.push("/auth/login");
+      }
+      toast.error(error?.response?.data?.message ?? "Something went wrong");
+      console.log(error);
     },
   });
 };
@@ -188,6 +196,7 @@ export const useGetMetrics = (id: string | undefined) => {
 };
 
 export const useAcceptAppointment = (appointmentId: string | null) => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   return useMutation({
@@ -212,6 +221,9 @@ export const useAcceptAppointment = (appointmentId: string | null) => {
       });
     },
     onError: (error: any) => {
+      if (error.response.status === 401) {
+        router.push("/auth/login");
+      }
       toast.error(error?.response?.data?.message ?? "Something went wrong");
       console.log("Error accepting appointment", error);
     },
@@ -219,6 +231,7 @@ export const useAcceptAppointment = (appointmentId: string | null) => {
 };
 
 export const useRejectAppointment = (appointmentId: string | null) => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const queryClient = useQueryClient();
   return useMutation({
@@ -243,6 +256,9 @@ export const useRejectAppointment = (appointmentId: string | null) => {
       toast.success("Appointment rejected");
     },
     onError: (error: any) => {
+      if (error.response.status === 401) {
+        router.push("/auth/login");
+      }
       toast.error(error?.response?.data?.message ?? "Something went wrong");
       console.log("Error rejecting appointment", error);
     },
