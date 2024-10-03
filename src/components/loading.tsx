@@ -5,7 +5,7 @@ type Props = {};
 
 const Loading = (props: Props) => {
   return (
-    <main className="h-svh w-full flex items-center justify-center backdrop-blur-md bg-white/40">
+    <main className="h-svh w-screen flex items-center justify-center backdrop-blur-md bg-white/40">
       <Image
         src="/images/logo.png"
         alt="logo"

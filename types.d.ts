@@ -106,6 +106,31 @@ interface PendingApprovals {
   }[];
   hasError: boolean;
 }
+
+interface RecentDoctors {
+  hasError: boolean;
+  message: string;
+  data: {
+    user: {
+      first_name: string;
+      last_name: string;
+      createdAt: string;
+    };
+    userId: string;
+  }[];
+}
+interface UnapprovedDoctors {
+  hasError: boolean;
+  message: string;
+  data: {
+    user: {
+      first_name: string;
+      last_name: string;
+      createdAt: string;
+      isDoctor: boolean;
+    };
+  }[];
+}
 interface AllUsers {
   message: string;
   data: {
@@ -115,4 +140,22 @@ interface AllUsers {
     phone_number: string;
   }[];
   hasError: boolean;
+}
+interface AllDoctors {
+  message: string;
+  hasError: boolean;
+  data: {
+    id: string;
+    userId: string;
+    isDoctorVerified: boolean;
+    createdAt: string;
+    updatedAt: string;
+    user: {
+      first_name: string;
+      last_name: string;
+      email: string;
+      phone_number: string;
+      createdAt: string;
+    };
+  }[];
 }

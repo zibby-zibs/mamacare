@@ -17,7 +17,7 @@ async function page() {
   return (
     <Suspense
       fallback={
-        <div className="h-svh w-full jusc' items-center flex">
+        <div className="h-svh w-full justify-center' items-center flex">
           <Loader2 className="animate-spin" size={40} />
           <p className="text-4xl font-monoton">MamaCare</p>
         </div>

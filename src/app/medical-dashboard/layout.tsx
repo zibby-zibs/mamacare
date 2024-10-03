@@ -12,15 +12,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={` antialiased`}>
-        <div className="flex min-h-screen w-full flex-col">
-          <div>
-            <Navbar />
-          </div>
-          <div className="">{children}</div>
-        </div>
-      </body>
-    </html>
+    <div className="flex min-h-screen w-full flex-col">
+      <div>
+        <Navbar />
+      </div>
+      <div className="">{children}</div>
+    </div>
   );
 }

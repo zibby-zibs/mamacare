@@ -32,16 +32,7 @@ import { useFirebaseMessages } from "@/hooks/realtime-user";
 import MessageBubble from "@/app/user-dashboard/messaging/_components/message-bubble";
 import { useMessageStore } from "@/store/doctor";
 
-type Props = {
-  message: {
-    sender: string;
-    content: string;
-    timestamp: string;
-    type: string;
-  }[];
-};
-
-const ChatInterface = ({}: Props) => {
+const ChatInterface = () => {
   const selectedUser = useMessageStore((store) => store.user);
   const user = useAuthStore((store) => store.user);
   const { data, isError, error } = useGetUserRequests(user?.data?.id);

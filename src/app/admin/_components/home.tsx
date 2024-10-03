@@ -131,15 +131,15 @@ const HomePage = (props: Props) => {
             </TableHeader>
             <TableBody>
               {pendingApprovals?.data.map((approval) => (
-                <TableRow key={approval.createdAt}>
+                <TableRow key={approval.user?.createdAt}>
                   <TableCell>
-                    {approval.first_name} {approval.last_name}
+                    {approval.user?.first_name} {approval.user?.last_name}
                   </TableCell>
                   <TableCell>Doctor Registration</TableCell>
                   <TableCell className="font-medium text-muted-foreground">
-                    {approval.createdAt &&
+                    {approval.user?.createdAt &&
                       format(
-                        parseISO(approval?.createdAt),
+                        parseISO(approval?.user?.createdAt),
                         "MMMM d, yyyy h:mm a"
                       )}
                   </TableCell>
@@ -205,16 +205,16 @@ const HomePage = (props: Props) => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {recentDoctors?.data.map((doctor) => (
-                  <TableRow key={doctor.createdAt}>
+                {recentDoctors?.data?.map((doctor) => (
+                  <TableRow key={doctor.user?.createdAt}>
                     <TableCell>
-                      {doctor.first_name} {doctor.last_name}
+                      {doctor.user?.first_name} {doctor.user?.last_name}
                     </TableCell>
 
                     <TableCell className="font-medium text-muted-foreground">
-                      {doctor.createdAt &&
+                      {doctor.user?.createdAt &&
                         format(
-                          parseISO(doctor?.createdAt),
+                          parseISO(doctor?.user?.createdAt),
                           "MMMM d, yyyy h:mm a"
                         )}
                     </TableCell>

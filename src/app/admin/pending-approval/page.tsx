@@ -1,10 +1,14 @@
+"use client";
+
 import React from "react";
 import ApprovalCard from "./_components/approval-card";
 import { portrait } from "@/images";
+import { useGetAdminPendingApproval } from "@/hooks/admin";
 
 type Props = {};
 
-const page = (props: Props) => {
+const PendingPage = (props: Props) => {
+  const { data, isPending, error, isError } = useGetAdminPendingApproval();
   const pendingApprovals = [
     {
       id: 1,
@@ -41,12 +45,12 @@ const page = (props: Props) => {
     <div className="max-w-screen-xl mx-auto px-5 lg:px-12 mt-20">
       <h1 className="text-3xl font-bold mb-6">Pending Doctor Approvals</h1>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {pendingApprovals.map((doctor) => (
-          <ApprovalCard key={doctor.id} doctor={doctor} />
+        {data?.data.map((doctor) => (
+          <ApprovalCard key={doctor.user.createdAt} doctor={doctor} />
         ))}
       </div>
     </div>
   );
 };
 
-export default page;
+export default PendingPage;

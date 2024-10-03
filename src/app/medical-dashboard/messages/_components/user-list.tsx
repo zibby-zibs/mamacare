@@ -22,16 +22,7 @@ import { Message } from "../../../../../types";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useMessageStore } from "@/store/doctor";
 
-type Props = {
-  messageList: {
-    id: number;
-    name: string;
-    image: StaticImageData;
-    lastMessage: string;
-  }[];
-};
-
-const UserList = ({ messageList }: Props) => {
+const UserList = () => {
   const user = useAuthStore((store) => store.user);
   const selectedUser = useMessageStore((store) => store.user);
   const [messages, setMessages] = useState([] as Message[]);

@@ -4,7 +4,15 @@ import { useRouter } from "next/navigation";
 import { useAuthStore } from "./admin-store";
 import axios from "axios";
 import { z } from "zod";
-import { AdminMetrics, AllUsers, PendingApprovals, User } from "../../../types";
+import {
+  AdminMetrics,
+  AllDoctors,
+  AllUsers,
+  PendingApprovals,
+  RecentDoctors,
+  UnapprovedDoctors,
+  User,
+} from "../../../types";
 import { toast } from "sonner";
 
 export const useSignIn = () => {
@@ -34,10 +42,10 @@ export const useGetAdminMetric = () => {
   return useQuery({
     queryKey: ["admin-metric"],
     queryFn: async () => {
-      if (!user) {
-        router.push("/admin/auth/login");
-        return;
-      }
+      // if (!user?.access_token) {
+      //   router.push("/admin/auth/login");
+      //   return;
+      // }
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard-metrics`,
         {
@@ -57,10 +65,10 @@ export const useGetAdminPendingApproval = () => {
   return useQuery({
     queryKey: ["admin-pending-approvals"],
     queryFn: async () => {
-      if (!user) {
-        router.push("/admin/auth/login");
-        return;
-      }
+      // if (!user?.access_token) {
+      //   router.push("/admin/auth/login");
+      //   return;
+      // }
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/pending-doctor-approvals`,
         {
@@ -70,7 +78,7 @@ export const useGetAdminPendingApproval = () => {
         }
       );
 
-      return response.data as PendingApprovals;
+      return response.data as UnapprovedDoctors;
     },
   });
 };
@@ -81,10 +89,10 @@ export const useGetAdminRecentUsers = () => {
   return useQuery({
     queryKey: ["admin-recent-users"],
     queryFn: async () => {
-      if (!user) {
-        router.push("/admin/auth/login");
-        return;
-      }
+      // if (!user?.access_token) {
+      //   router.push("/admin/auth/login");
+      //   return;
+      // }
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/recent-users`,
         {
@@ -105,10 +113,10 @@ export const useGetAllUsers = () => {
   return useQuery({
     queryKey: ["admin-all-users"],
     queryFn: async () => {
-      if (!user) {
-        router.push("/admin/auth/login");
-        return;
-      }
+      // if (!user?.access_token) {
+      //   router.push("/admin/auth/login");
+      //   return;
+      // }
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/all-users`,
         {
@@ -127,14 +135,14 @@ export const useGetAdminRecentDoctors = () => {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   return useQuery({
-    queryKey: ["admin-recent-users"],
+    queryKey: ["admin-recent-doctors"],
     queryFn: async () => {
-      if (!user) {
-        router.push("/admin/auth/login");
-        return;
-      }
+      // if (!user?.access_token) {
+      //   router.push("/admin/auth/login");
+      //   return;
+      // }
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/recent-users`,
+        `${process.env.NEXT_PUBLIC_API_URL}/admin/recent-doctors`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -142,7 +150,7 @@ export const useGetAdminRecentDoctors = () => {
         }
       );
 
-      return response.data as PendingApprovals;
+      return response.data as RecentDoctors;
     },
   });
 };
@@ -151,12 +159,12 @@ export const useGetAllDoctors = () => {
   const router = useRouter();
   const user = useAuthStore((state) => state.user);
   return useQuery({
-    queryKey: ["admin-all-users"],
+    queryKey: ["admin-all-doctors"],
     queryFn: async () => {
-      if (!user) {
-        router.push("/admin/auth/login");
-        return;
-      }
+      // if (!user?.access_token) {
+      //   router.push("/admin/auth/login");
+      //   return;
+      // }
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/admin/all-doctors`,
         {
@@ -166,7 +174,7 @@ export const useGetAllDoctors = () => {
         }
       );
 
-      return response.data as AllUsers;
+      return response.data as AllDoctors;
     },
   });
 };

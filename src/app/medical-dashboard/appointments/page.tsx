@@ -4,11 +4,27 @@ import { Suspense } from "react";
 
 import { Loader2 } from "lucide-react";
 import dynamic from "next/dynamic";
+import { useAuthStore } from "@/store/user";
 
 const AppointmentsList = dynamic(() => import("./_components/appointments"), {
   ssr: false,
 });
 export default function AppointmentsPage() {
+  const user = useAuthStore((state) => state.user);
+
+  if (
+    !user?.data?.doctorId ||
+    user?.data?.doctorId === "" ||
+    user?.data?.doctorId === null
+  ) {
+    return (
+      <div className="w-full h-[calc(100svh-100px)] flex items-center justify-center">
+        <p className="max-w-[350px] text-4xl text-center">
+          Your account is not verified yet. Please check back later
+        </p>
+      </div>
+    );
+  }
   return (
     <Suspense
       fallback={
