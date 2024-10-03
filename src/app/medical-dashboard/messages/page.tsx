@@ -1,5 +1,6 @@
+"use client";
+
 import { sampleMessages, user, userList } from "@/lib/user";
-import Image from "next/image";
 import React from "react";
 import UserList from "./_components/user-list";
 import ChatInterface from "./_components/doctor-messaging";

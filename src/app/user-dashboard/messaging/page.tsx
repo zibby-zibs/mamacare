@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import ChatInterface from "./_components/chat-interface";
 import { Separator } from "@/components/ui/separator";
