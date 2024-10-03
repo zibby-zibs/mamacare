@@ -1,9 +1,13 @@
 "use client";
 
 import { Suspense } from "react";
-import AppointmentsList from "./_components/appointments";
-import { Loader2 } from "lucide-react";
 
+import { Loader2 } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const AppointmentsList = dynamic(() => import("./_components/appointments"), {
+  ssr: false,
+});
 export default function AppointmentsPage() {
   return (
     <Suspense
