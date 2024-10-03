@@ -4,6 +4,7 @@ import pregnant_woman_two from "./chair-preg.jpg";
 import pregnant_woman_three from "./happy-preg.jpg";
 import pregnant_woman_four from "./sitting-pregnant.jpg";
 import portrait from "./user-portrait.jpeg";
+import mamaLogo from "./logo.png";
 
 export {
   login_woman,
@@ -12,4 +13,5 @@ export {
   pregnant_woman_three,
   pregnant_woman_four,
   portrait,
+  mamaLogo,
 };
