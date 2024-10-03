@@ -13,11 +13,13 @@ import { Label } from "@/components/ui/label";
 import { useGetUserRequests, useRequestDoctor } from "@/hooks/user";
 import { useAuthStore } from "@/store/user";
 import { LucideLoader } from "lucide-react";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 
 type Props = {};
 
 const Request = (props: Props) => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   const { isPending, mutateAsync } = useRequestDoctor(user?.data?.id);
   const [description, setDescription] = useState("");
@@ -29,6 +31,14 @@ const Request = (props: Props) => {
   const onSubmit = async () => {
     mutateAsync({ description });
   };
+
+  useEffect(() => {
+    if (isError) {
+      if ((error as any)?.response?.status === 401) {
+        router.push("/auth/login");
+      }
+    }
+  }, [error, isError]);
   return (
     <Dialog>
       <DialogTrigger disabled={!!requestId}>

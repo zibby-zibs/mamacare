@@ -82,12 +82,16 @@ export const useUpdateUser = (id: string | undefined) => {
       toast.success("Your data has been updated successfully!");
     },
     onError: (error: any) => {
+      if (error.response.status === 401) {
+        router.push("/auth/login");
+      }
       toast.error(error?.response?.data?.message ?? "Something went wrong");
       console.log(error);
     },
   });
 };
 export const useRequestDoctor = (id: string | undefined) => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   return useMutation({
     mutationKey: ["request-doctor-user"],
@@ -108,6 +112,9 @@ export const useRequestDoctor = (id: string | undefined) => {
       toast.success("A doctor will respond to you soon!");
     },
     onError: (error: any) => {
+      if (error.response.status === 401) {
+        router.push("/auth/login");
+      }
       toast.error(error?.response?.data?.message ?? "Something went wrong");
       console.log(error);
     },
@@ -115,6 +122,7 @@ export const useRequestDoctor = (id: string | undefined) => {
 };
 
 export const useCreateAppointment = (id: string | undefined) => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
   return useMutation({
     mutationKey: ["create-appointment-user"],
@@ -139,6 +147,9 @@ export const useCreateAppointment = (id: string | undefined) => {
       toast.success("An appointment has been scheduled with your doctor!");
     },
     onError: (error: any) => {
+      if (error.response.status === 401) {
+        router.push("/auth/login");
+      }
       toast.error(error?.response?.data?.message ?? "Something went wrong");
       console.log(error);
     },
