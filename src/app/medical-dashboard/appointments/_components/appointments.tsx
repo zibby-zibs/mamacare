@@ -140,7 +140,9 @@ export default function AppointmentsList() {
                       ) : (
                         "Accept Appointment"
                       )}
-                      {isAccepting && <Loader2 className="animate-spin" />}
+                      {isAccepting && selectedId === appointment.id && (
+                        <Loader2 className="animate-spin" />
+                      )}
                     </Button>
                     <Button
                       variant="destructive"
@@ -151,7 +153,9 @@ export default function AppointmentsList() {
                       }}
                     >
                       Cancel Appointment
-                      {isRejecting && <Loader2 className="animate-spin" />}
+                      {isRejecting && selectedId === appointment.id && (
+                        <Loader2 className="animate-spin" />
+                      )}
                     </Button>
                   </div>
                 </div>

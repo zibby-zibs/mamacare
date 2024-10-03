@@ -95,7 +95,7 @@ const SignupPage = () => {
   }
 
   return (
-    <div className="w-full lg:grid lg:grid-cols-2 !max-h-svh min-h-svh overflow-hidden">
+    <div className="w-full lg:grid lg:grid-cols-2 !max-h-svh min-h-svh overflow-hidden p-6">
       <div className="py-12 overflow-y-auto min-h-[calc(100svh-50px)] max-h-[calc(100svh-50px)] scrollbar-none">
         <div className="mx-auto grid max-w-[520px] gap-6 w-full">
           <div className="grid gap-2 text-center">
