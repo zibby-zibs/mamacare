@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import {
   Bell,
@@ -7,6 +9,7 @@ import {
   UserPlus,
   ClipboardList,
   Menu,
+  Loader2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -27,9 +30,44 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  useGetAdminMetric,
+  useGetAdminPendingApproval,
+  useGetAdminRecentDoctors,
+  useGetAdminRecentUsers,
+} from "@/hooks/admin";
+import { format, parseISO } from "date-fns";
 type Props = {};
 
 const HomePage = (props: Props) => {
+  const {
+    data: metric,
+    isPending: isPendingMetric,
+    isError,
+    error,
+  } = useGetAdminMetric();
+
+  const {
+    data: pendingApprovals,
+    isPending: isPendingApprovals,
+    isError: isPendingApprovalsError,
+    error: pendingApprovalsError,
+  } = useGetAdminPendingApproval();
+
+  const {
+    data: recentDoctors,
+    isPending: isPendingDoctors,
+    isError: isDoctorsError,
+    error: doctorsError,
+  } = useGetAdminRecentDoctors();
+
+  const {
+    data: recentUsers,
+    isPending: isPendingUsers,
+    isError: isUsersError,
+    error: usersError,
+  } = useGetAdminRecentUsers();
+
   return (
     <main className="p-4 md:p-6 space-y-6 max-w-screen-xl mx-auto">
       <h1 className="text-3xl font-semibold">Dashboard</h1>
@@ -42,7 +80,10 @@ const HomePage = (props: Props) => {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">1,234</div>
+            <div className="text-2xl font-bold">
+              {metric?.data.totalUsers}{" "}
+              {isPendingMetric && <Loader2 className="animate-spin" />}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -51,7 +92,10 @@ const HomePage = (props: Props) => {
             <UserPlus className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">56</div>
+            <div className="text-2xl font-bold">
+              {metric?.data.totalDoctors}{" "}
+              {isPendingMetric && <Loader2 className="animate-spin" />}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -62,7 +106,10 @@ const HomePage = (props: Props) => {
             <ClipboardList className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
+            <div className="text-2xl font-bold">
+              {metric?.data.pendingRequests}{" "}
+              {isPendingMetric && <Loader2 className="animate-spin" />}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -83,32 +130,29 @@ const HomePage = (props: Props) => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              <TableRow>
-                <TableCell>Dr. Jane Smith</TableCell>
-                <TableCell>Doctor Registration</TableCell>
-                <TableCell>2023-09-15</TableCell>
-                <TableCell>
-                  <Button size="sm" className="mr-2">
-                    Approve
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    Reject
-                  </Button>
-                </TableCell>
-              </TableRow>
-              <TableRow>
-                <TableCell>John Doe</TableCell>
-                <TableCell>User Verification</TableCell>
-                <TableCell>2023-09-14</TableCell>
-                <TableCell>
-                  <Button size="sm" className="mr-2">
-                    Approve
-                  </Button>
-                  <Button size="sm" variant="outline">
-                    Reject
-                  </Button>
-                </TableCell>
-              </TableRow>
+              {pendingApprovals?.data.map((approval) => (
+                <TableRow key={approval.createdAt}>
+                  <TableCell>
+                    {approval.first_name} {approval.last_name}
+                  </TableCell>
+                  <TableCell>Doctor Registration</TableCell>
+                  <TableCell className="font-medium text-muted-foreground">
+                    {approval.createdAt &&
+                      format(
+                        parseISO(approval?.createdAt),
+                        "MMMM d, yyyy h:mm a"
+                      )}
+                  </TableCell>
+                  <TableCell>
+                    <Button size="sm" className="mr-2">
+                      Approve
+                    </Button>
+                    <Button size="sm" variant="outline">
+                      Reject
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </CardContent>
@@ -125,19 +169,24 @@ const HomePage = (props: Props) => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Email</TableHead>
+
                   <TableHead>Joined</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell>Alice Johnson</TableCell>
-                  <TableCell>alice@example.com</TableCell>
-                  <TableCell>2023-09-10</TableCell>
-                </TableRow>
-                <TableCell>Bob Williams</TableCell>
-                <TableCell>bob@example.com</TableCell>
-                <TableCell>2023-09-09</TableCell>
+                {recentUsers?.data.map((user) => (
+                  <TableRow key={user.createdAt}>
+                    <TableCell>
+                      {" "}
+                      {user.first_name} {user.last_name}{" "}
+                    </TableCell>
+                    <TableCell className="font-medium text-muted-foreground">
+                      {" "}
+                      {user?.createdAt &&
+                        format(parseISO(user.createdAt), "MMMM d, yyyy h:mm a")}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>
@@ -151,21 +200,26 @@ const HomePage = (props: Props) => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Name</TableHead>
-                  <TableHead>Specialty</TableHead>
+
                   <TableHead>Joined</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell>Dr. Emily Brown</TableCell>
-                  <TableCell>Cardiology</TableCell>
-                  <TableCell>2023-09-08</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>Dr. Michael Lee</TableCell>
-                  <TableCell>Pediatrics</TableCell>
-                  <TableCell>2023-09-07</TableCell>
-                </TableRow>
+                {recentDoctors?.data.map((doctor) => (
+                  <TableRow key={doctor.createdAt}>
+                    <TableCell>
+                      {doctor.first_name} {doctor.last_name}
+                    </TableCell>
+
+                    <TableCell className="font-medium text-muted-foreground">
+                      {doctor.createdAt &&
+                        format(
+                          parseISO(doctor?.createdAt),
+                          "MMMM d, yyyy h:mm a"
+                        )}
+                    </TableCell>
+                  </TableRow>
+                ))}
               </TableBody>
             </Table>
           </CardContent>

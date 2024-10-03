@@ -20,7 +20,7 @@ type Props = {};
 const Header = (props: Props) => {
   const setIsSidebarOpen = useSidebarStore((state) => state.setIsSidebarOpen);
   return (
-    <main className="bg-white">
+    <main className="bg-white sticky top-0 z-30">
       <header className="flex h-16 items-center justify-end bg-white px-4 shadow-sm w-full max-w-screen-xl mx-auto">
         <Button
           variant="ghost"

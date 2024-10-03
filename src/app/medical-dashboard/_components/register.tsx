@@ -36,6 +36,8 @@ import { DoctorRegistrationformSchema } from "@/lib/schemas";
 
 import NaijaStates from "naija-state-local-government";
 import { useSignUp } from "@/hooks/doctor";
+import "react-phone-number-input/style.css";
+import PhoneInput from "react-phone-number-input";
 
 const carouselImages = [
   pregnant_womaan_one,
@@ -180,7 +182,11 @@ const SignupPage = () => {
                   <FormItem>
                     <FormLabel>Phone Number</FormLabel>
                     <FormControl>
-                      <Input placeholder="+1234567890" {...field} />
+                      <PhoneInput
+                        placeholder="+1234567890"
+                        {...field}
+                        countries={["NG"]}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

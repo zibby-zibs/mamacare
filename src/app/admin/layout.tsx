@@ -13,21 +13,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={` antialiased`}>
-        <div className="flex h-screen bg-gray-100">
-          <div>
-            <Sidebar />
-          </div>
-          <div className="flex-1">
-            <div>
-              <Header />
-            </div>
-
-            {children}
-          </div>
+    <>
+      <div className="flex h-screen bg-gray-100">
+        <div>
+          <Sidebar />
         </div>
-      </body>
-    </html>
+        <div className="flex-1 max-h-svh overflow-y-auto pb-8">
+          <div className="!sticky top-0 z-30">
+            <Header />
+          </div>
+          <div>{children}</div>
+        </div>
+      </div>
+    </>
   );
 }

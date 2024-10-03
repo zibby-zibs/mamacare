@@ -14,7 +14,7 @@ const page = (props: Props) => {
         </div>
       }
     >
-      <div>
+      <div className="">
         <HomePage />
       </div>
     </Suspense>

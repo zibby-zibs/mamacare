@@ -34,7 +34,7 @@ const Sidebar = (props: Props) => {
   const routes = [
     {
       title: "Dashboard",
-      href: "/",
+      href: "/admin",
       icon: <Home className="h-4 w-4" />,
     },
     {

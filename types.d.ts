@@ -84,3 +84,35 @@ interface Metric {
   };
   hasError: boolean;
 }
+
+//admin
+interface AdminMetrics {
+  message: string;
+  data: {
+    totalUsers: number;
+    totalDoctors: number;
+    pendingRequests: number;
+  };
+  hasError: boolean;
+}
+
+interface PendingApprovals {
+  message: string;
+  data: {
+    first_name: string;
+    last_name: string;
+    createdAt: string;
+    isDoctor: boolean;
+  }[];
+  hasError: boolean;
+}
+interface AllUsers {
+  message: string;
+  data: {
+    first_name: string;
+    last_name: string;
+    createdAt: string;
+    phone_number: string;
+  }[];
+  hasError: boolean;
+}
