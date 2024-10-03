@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import {
   Bell,
   ChevronDown,
@@ -31,6 +31,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  useApproveDoctor,
   useGetAdminMetric,
   useGetAdminPendingApproval,
   useGetAdminRecentDoctors,
@@ -40,6 +41,7 @@ import { format, parseISO } from "date-fns";
 type Props = {};
 
 const HomePage = (props: Props) => {
+  const [doctorId, setDoctorId] = useState("");
   const {
     data: metric,
     isPending: isPendingMetric,
@@ -67,6 +69,12 @@ const HomePage = (props: Props) => {
     isError: isUsersError,
     error: usersError,
   } = useGetAdminRecentUsers();
+
+  const { mutateAsync, isPending: isApproving } = useApproveDoctor(doctorId);
+
+  const onApprove = async () => {
+    await mutateAsync();
+  };
 
   return (
     <main className="p-4 md:p-6 space-y-6 max-w-screen-xl mx-auto">
@@ -146,8 +154,18 @@ const HomePage = (props: Props) => {
                   </TableCell>
                   <TableCell>{approval.user.reg_number}</TableCell>
                   <TableCell className="flex flex-col gap-2 md:flex-row ">
-                    <Button size="sm" className="mr-2">
+                    <Button
+                      size="sm"
+                      className="mr-2 gap-3"
+                      onClick={() => {
+                        setDoctorId(approval?.user?.doctorId);
+                        onApprove();
+                      }}
+                    >
                       Approve
+                      {isApproving && doctorId === approval?.user?.doctorId && (
+                        <Loader2 className="animate-spin" />
+                      )}
                     </Button>
                     <Button size="sm" variant="destructive">
                       Reject

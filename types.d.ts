@@ -137,6 +137,7 @@ interface UnapprovedDoctors {
       reg_number: string;
       state: string;
       description: string;
+      doctorId: string;
     };
   }[];
 }

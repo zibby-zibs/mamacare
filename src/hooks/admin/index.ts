@@ -1,5 +1,5 @@
 import { UserLoginformSchema } from "@/lib/schemas";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "./admin-store";
 import axios from "axios";
@@ -161,6 +161,32 @@ export const useGetAllDoctors = () => {
       });
 
       return response.data as AllDoctors;
+    },
+  });
+};
+
+export const useApproveDoctor = (doctorId: string | null) => {
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["admin-approve-doctors"],
+    mutationFn: async () => {
+      const response = await axiosUserInstance.patch(
+        `/admin/approve-doctor/${doctorId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${user?.access_token}`,
+          },
+        }
+      );
+
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-pending-approvals"] });
+      toast.success("Doctor approved");
     },
   });
 };
