@@ -17,6 +17,7 @@ import {
   setDoc,
 } from "firebase/firestore";
 import { db } from "../../../firebase-config";
+import axiosUserInstance from "./interception";
 
 export const useSignUp = () => {
   const router = useRouter();
@@ -78,8 +79,8 @@ export const useAcceptRequests = (
       doctorId: string | undefined;
       status: "ACCEPTED" | "REJECTED";
     }) => {
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/medic/accept-request/${id}`,
+      const response = await axiosUserInstance.patch(
+        `/medic/accept-request/${id}`,
         data,
         {
           headers: {
@@ -124,8 +125,8 @@ export const useGetRecentAppointments = () => {
   return useQuery({
     queryKey: ["recent-appointments"],
     queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/medic/appointments/recent/${user?.data?.doctorId}`,
+      const response = await axiosUserInstance.get(
+        `/medic/appointments/recent/${user?.data?.doctorId}`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -143,8 +144,8 @@ export const useGetAppointments = () => {
   return useQuery({
     queryKey: ["all-appointments"],
     queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/medic/appointments/${user?.data?.doctorId}`,
+      const response = await axiosUserInstance.get(
+        `/medic/appointments/${user?.data?.doctorId}`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -162,14 +163,11 @@ export const useGetRequests = () => {
   return useQuery({
     queryKey: ["all-requests"],
     queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/medic/requests`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/medic/requests`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as Request;
     },
@@ -181,14 +179,11 @@ export const useGetMetrics = (id: string | undefined) => {
   return useQuery({
     queryKey: ["doctor-metrics"],
     queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/medic/${id}/metrics`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/medic/${id}/metrics`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as Metric;
     },
@@ -202,8 +197,8 @@ export const useAcceptAppointment = (appointmentId: string | null) => {
   return useMutation({
     mutationKey: ["accept-appointment"],
     mutationFn: async () => {
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/medic/accept-appointment/${appointmentId}`,
+      const response = await axiosUserInstance.patch(
+        `/medic/accept-appointment/${appointmentId}`,
         {},
         {
           headers: {
@@ -237,8 +232,8 @@ export const useRejectAppointment = (appointmentId: string | null) => {
   return useMutation({
     mutationKey: ["reject-appointment"],
     mutationFn: async () => {
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/medic/reject-appointment/${appointmentId}`,
+      const response = await axiosUserInstance.patch(
+        `/medic/reject-appointment/${appointmentId}`,
         {},
         {
           headers: {

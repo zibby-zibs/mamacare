@@ -21,7 +21,7 @@ import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import Image from "next/image";
 import { useAuthStore } from "@/store/user";
 import { User } from "lucide-react";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 export const description = "User pregnancy dashboard";
@@ -218,7 +218,11 @@ export function UserDashboard() {
             </div> */}
             <div className="leading-none text-muted-foreground font-bold">
               Due date:{" "}
-              {/* {format(user?.data?.expectedDeliveryDate, "MMM dd, yyyy")} */}
+              {user?.data?.expectedDeliveryDate &&
+                format(
+                  parseISO(user?.data?.expectedDeliveryDate),
+                  "MMM dd, yyyy"
+                )}
             </div>
           </CardFooter>
         </Card>

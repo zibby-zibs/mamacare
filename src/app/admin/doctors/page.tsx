@@ -24,16 +24,26 @@ const UsersPage = (props: Props) => {
           <TableHeader>
             <TableRow>
               <TableHead>First Name</TableHead>
+
               <TableHead>Last Name</TableHead>
               <TableHead>Phone Number</TableHead>
+              <TableHead>State</TableHead>
+              <TableHead>LGA</TableHead>
+              <TableHead>Registration Number</TableHead>
+              <TableHead>Description</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data?.data?.map((user) => (
               <TableRow key={user.user?.phone_number}>
                 <TableCell>{user.user?.first_name}</TableCell>
+
                 <TableCell>{user.user?.last_name}</TableCell>
                 <TableCell>{user.user?.phone_number}</TableCell>
+                <TableCell>{user.user?.state}</TableCell>
+                <TableCell>{user.user?.lga}</TableCell>
+                <TableCell>{user.user?.reg_number}</TableCell>
+                <TableCell>{user.user?.description}</TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -103,6 +103,7 @@ interface PendingApprovals {
     last_name: string;
     createdAt: string;
     isDoctor: boolean;
+    expectedDeliveryDate: string | null;
   }[];
   hasError: boolean;
 }
@@ -115,6 +116,10 @@ interface RecentDoctors {
       first_name: string;
       last_name: string;
       createdAt: string;
+      lga: string;
+      reg_number: string;
+      state: string;
+      description: string;
     };
     userId: string;
   }[];
@@ -128,17 +133,16 @@ interface UnapprovedDoctors {
       last_name: string;
       createdAt: string;
       isDoctor: boolean;
+      lga: string;
+      reg_number: string;
+      state: string;
+      description: string;
     };
   }[];
 }
 interface AllUsers {
   message: string;
-  data: {
-    first_name: string;
-    last_name: string;
-    createdAt: string;
-    phone_number: string;
-  }[];
+  data: User["data"][];
   hasError: boolean;
 }
 interface AllDoctors {
@@ -156,6 +160,10 @@ interface AllDoctors {
       email: string;
       phone_number: string;
       createdAt: string;
+      lga: string;
+      reg_number: string;
+      state: string;
+      description: string;
     };
   }[];
 }

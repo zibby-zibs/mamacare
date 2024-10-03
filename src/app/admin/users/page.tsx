@@ -13,6 +13,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useGetAllUsers } from "@/hooks/admin";
+import { format, parseISO } from "date-fns";
 
 type Props = {};
 
@@ -26,16 +27,30 @@ const UsersPage = (props: Props) => {
           <TableHeader>
             <TableRow>
               <TableHead>First Name</TableHead>
+              <TableHead>Middle Name</TableHead>
               <TableHead>Last Name</TableHead>
               <TableHead>Phone Number</TableHead>
+              <TableHead>State</TableHead>
+              <TableHead>LGA</TableHead>
+              <TableHead>Expected Delivery Date</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {data?.data?.map((user) => (
               <TableRow key={user.phone_number}>
                 <TableCell>{user.first_name}</TableCell>
+                <TableCell>{user.middle_name}</TableCell>
                 <TableCell>{user.last_name}</TableCell>
                 <TableCell>{user.phone_number}</TableCell>
+                <TableCell>{user.state}</TableCell>
+                <TableCell>{user.lga}</TableCell>
+                <TableCell>
+                  {user?.expectedDeliveryDate &&
+                    format(
+                      parseISO(user?.expectedDeliveryDate),
+                      "MMMM d, yyyy"
+                    )}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

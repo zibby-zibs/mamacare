@@ -59,7 +59,7 @@ const Header = (props: Props) => {
   ];
   return (
     <main className="bg-white sticky top-0 z-30">
-      <header className="flex h-16 items-center justify-between bg-white px-4 shadow-sm w-full max-w-screen-xl mx-auto">
+      <header className="flex h-16 items-center justify-between md:justify-end bg-white px-4 shadow-sm w-full max-w-screen-xl mx-auto">
         <Sheet>
           <SheetTrigger asChild>
             <Button

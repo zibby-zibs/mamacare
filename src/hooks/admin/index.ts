@@ -14,6 +14,7 @@ import {
   User,
 } from "../../../types";
 import { toast } from "sonner";
+import axiosUserInstance from "./interception";
 
 export const useSignIn = () => {
   const router = useRouter();
@@ -46,14 +47,11 @@ export const useGetAdminMetric = () => {
       //   router.push("/admin/auth/login");
       //   return;
       // }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/dashboard-metrics`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/admin/dashboard-metrics`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as AdminMetrics;
     },
@@ -69,8 +67,8 @@ export const useGetAdminPendingApproval = () => {
       //   router.push("/admin/auth/login");
       //   return;
       // }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/pending-doctor-approvals`,
+      const response = await axiosUserInstance.get(
+        `/admin/pending-doctor-approvals`,
         {
           headers: {
             Authorization: `Bearer ${user?.access_token}`,
@@ -93,14 +91,11 @@ export const useGetAdminRecentUsers = () => {
       //   router.push("/admin/auth/login");
       //   return;
       // }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/recent-users`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/admin/recent-users`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as PendingApprovals;
     },
@@ -117,14 +112,11 @@ export const useGetAllUsers = () => {
       //   router.push("/admin/auth/login");
       //   return;
       // }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/all-users`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/admin/all-users`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as AllUsers;
     },
@@ -141,14 +133,11 @@ export const useGetAdminRecentDoctors = () => {
       //   router.push("/admin/auth/login");
       //   return;
       // }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/recent-doctors`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/admin/recent-doctors`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as RecentDoctors;
     },
@@ -165,14 +154,11 @@ export const useGetAllDoctors = () => {
       //   router.push("/admin/auth/login");
       //   return;
       // }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/admin/all-doctors`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/admin/all-doctors`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as AllDoctors;
     },

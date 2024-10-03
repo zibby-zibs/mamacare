@@ -126,6 +126,7 @@ const HomePage = (props: Props) => {
                 <TableHead>Name</TableHead>
                 <TableHead>Type</TableHead>
                 <TableHead>Date</TableHead>
+                <TableHead>Registration Number</TableHead>
                 <TableHead>Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -143,11 +144,12 @@ const HomePage = (props: Props) => {
                         "MMMM d, yyyy h:mm a"
                       )}
                   </TableCell>
-                  <TableCell>
+                  <TableCell>{approval.user.reg_number}</TableCell>
+                  <TableCell className="flex flex-col gap-2 md:flex-row ">
                     <Button size="sm" className="mr-2">
                       Approve
                     </Button>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="destructive">
                       Reject
                     </Button>
                   </TableCell>
@@ -171,6 +173,7 @@ const HomePage = (props: Props) => {
                   <TableHead>Name</TableHead>
 
                   <TableHead>Joined</TableHead>
+                  <TableHead>Expected Delivery Date</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -184,6 +187,14 @@ const HomePage = (props: Props) => {
                       {" "}
                       {user?.createdAt &&
                         format(parseISO(user.createdAt), "MMMM d, yyyy h:mm a")}
+                    </TableCell>
+                    <TableCell className="font-medium text-muted-foreground">
+                      {" "}
+                      {user?.expectedDeliveryDate &&
+                        format(
+                          parseISO(user.expectedDeliveryDate),
+                          "MMMM d, yyyy"
+                        )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -202,6 +213,7 @@ const HomePage = (props: Props) => {
                   <TableHead>Name</TableHead>
 
                   <TableHead>Joined</TableHead>
+                  <TableHead>Registration Number</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -218,6 +230,7 @@ const HomePage = (props: Props) => {
                           "MMMM d, yyyy h:mm a"
                         )}
                     </TableCell>
+                    <TableCell>{doctor.user?.reg_number}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

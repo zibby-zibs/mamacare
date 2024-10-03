@@ -33,21 +33,26 @@ const ApprovalCard = ({ doctor }: Props) => {
             <CardTitle className="text-lg">
               {doctor.user?.first_name} {doctor.user?.last_name}
             </CardTitle>
-            <p className="text-sm text-muted-foreground">Reg. No:</p>
+            <p className="text-sm text-muted-foreground">
+              Reg. No: {doctor.user.reg_number}
+            </p>
           </div>
         </div>
       </CardHeader>
       <CardContent className="flex-grow">
         <div className="space-y-2">
           <div className="flex space-x-2">
-            {/* <Badge variant="outline">{doctor.lga}</Badge> */}
-            {/* <Badge variant="outline">{doctor.state}</Badge> */}
+            <Badge variant="outline">{doctor.user.lga}</Badge>
+            <Badge variant="outline">{doctor.user.state}</Badge>
           </div>
-          {/* <p className="text-sm">{doctor.summary}</p> */}
+          <p className="text-sm">{doctor.user.description}</p>
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline" className="w-[48%]">
+        <Button
+          variant="outline"
+          className="w-[48%] hover:bg-destructive hover:text-white"
+        >
           <XCircle className="mr-2 h-4 w-4" />
           Reject
         </Button>

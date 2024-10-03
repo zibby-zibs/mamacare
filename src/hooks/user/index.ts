@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/user";
 import { Request, User } from "../../../types";
+import axiosUserInstance from "./interception";
 
 export const useSignUp = () => {
   const router = useRouter();
@@ -64,15 +65,11 @@ export const useUpdateUser = (id: string | undefined) => {
   return useMutation({
     mutationKey: ["update-user"],
     mutationFn: async (data: Partial<z.infer<typeof userProfileSchema>>) => {
-      const response = await axios.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.patch(`/user/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data;
     },
@@ -96,8 +93,8 @@ export const useRequestDoctor = (id: string | undefined) => {
   return useMutation({
     mutationKey: ["request-doctor-user"],
     mutationFn: async (data: { description: string }) => {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/${id}/create-request`,
+      const response = await axiosUserInstance.post(
+        `/user/${id}/create-request`,
         data,
         {
           headers: {
@@ -131,8 +128,8 @@ export const useCreateAppointment = (id: string | undefined) => {
       doctorId: string;
       date: Date;
     }) => {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/${id}/create-appointment`,
+      const response = await axiosUserInstance.post(
+        `/user/${id}/create-appointment`,
         data,
         {
           headers: {
@@ -161,14 +158,11 @@ export const useGetUserRequests = (id: string | undefined) => {
   return useQuery({
     queryKey: ["get-user-requests"],
     queryFn: async () => {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/user/${id}/requests`,
-        {
-          headers: {
-            Authorization: `Bearer ${user?.access_token}`,
-          },
-        }
-      );
+      const response = await axiosUserInstance.get(`/user/${id}/requests`, {
+        headers: {
+          Authorization: `Bearer ${user?.access_token}`,
+        },
+      });
 
       return response.data as Request;
     },

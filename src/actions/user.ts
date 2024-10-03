@@ -3,6 +3,7 @@
 import axios from "axios";
 
 import { Appointment, Request } from "../../types";
+import { redirect } from "next/navigation";
 
 export const fetchUserById = async (id: any, accessToken: string) => {
   try {
@@ -17,6 +18,9 @@ export const fetchUserById = async (id: any, accessToken: string) => {
 
     return response.data;
   } catch (error: any) {
+    if (error.response.status === 401) {
+      redirect("/auth/login");
+    }
     console.log("FETCH_SINGLE_USER_ERROR", error.response.data);
   }
 };
@@ -34,6 +38,9 @@ export const fetchRequests = async (accessToken: string) => {
 
     return response.data as Request;
   } catch (error: any) {
+    if (error.response.status === 401) {
+      redirect("/auth/login");
+    }
     console.log("FETCH_REQUEST_ERROR", error.response.data);
   }
 };
@@ -53,6 +60,9 @@ export const fetchRecentAppointments = async (
 
     return response.data as Appointment;
   } catch (error: any) {
+    if (error.response.status === 401) {
+      redirect("/auth/login");
+    }
     console.log("FETCH_APPOINTMENT_ERROR", error.response.data);
   }
 };
