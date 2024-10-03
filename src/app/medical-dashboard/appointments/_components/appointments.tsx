@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,7 @@ import {
 } from "@/hooks/doctor";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format, parseISO } from "date-fns";
+import { useRouter } from "next/navigation";
 
 interface Appointment {
   id: string;
@@ -68,8 +69,9 @@ const initialAppointments: Appointment[] = [
 ];
 
 export default function AppointmentsList() {
+  const router = useRouter();
   const [selectedId, setSelectedId] = useState<string | null>(null);
-  const { data, isPending } = useGetAppointments();
+  const { data, isPending, isError, error } = useGetAppointments();
   const { mutateAsync, isPending: isRejecting } =
     useRejectAppointment(selectedId);
   const { mutateAsync: acceptAppointment, isPending: isAccepting } =
@@ -82,6 +84,12 @@ export default function AppointmentsList() {
   const handleAcceptAppointment = async () => {
     await acceptAppointment();
   };
+
+  useEffect(() => {
+    if (isError && (error as any).response.status === 401) {
+      router.push("/auth/login");
+    }
+  }, [error, isError]);
 
   return (
     <>

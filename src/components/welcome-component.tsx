@@ -27,7 +27,7 @@ const Welcome = () => {
         window.location.href = "auth/sign-up";
         break;
       case "medical":
-        window.location.href = "/medical-professional/auth/register";
+        window.location.href = "/medical-dashboard/auth/register";
         break;
       case "admin":
         window.location.href = "/admin/sign-up";

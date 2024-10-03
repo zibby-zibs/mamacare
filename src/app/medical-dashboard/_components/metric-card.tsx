@@ -4,13 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useGetMetrics } from "@/hooks/doctor";
 import { useAuthStore } from "@/store/user";
 import { Activity, CreditCard, DollarSign, Loader2, Users } from "lucide-react";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 type Props = {};
 
 const MetricCard = (props: Props) => {
+  const router = useRouter();
   const user = useAuthStore((state) => state.user);
-  const { data, isPending } = useGetMetrics(user?.data?.doctorId);
+  const { data, isPending, error, isError } = useGetMetrics(
+    user?.data?.doctorId
+  );
+
+  useEffect(() => {
+    if (isError && (error as any).response.status === 401) {
+      router.push("/auth/login");
+    }
+  }, [error, isError]);
   return (
     <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
       <Card x-chunk="dashboard-01-chunk-3">

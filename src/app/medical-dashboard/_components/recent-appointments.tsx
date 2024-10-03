@@ -5,12 +5,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useGetRecentAppointments } from "@/hooks/doctor";
 import { format, formatDate, parseISO } from "date-fns";
-import React from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 type Props = {};
 
 const RecentAppointments = (props: Props) => {
-  const { data, isPending } = useGetRecentAppointments();
+  const router = useRouter();
+  const { data, isPending, error, isError } = useGetRecentAppointments();
+
+  useEffect(() => {
+    if (isError && (error as any).response.status === 401) {
+      router.push("/auth/login");
+    }
+  }, [error, isError]);
   return (
     <Card x-chunk="dashboard-01-chunk-5">
       <CardHeader>
