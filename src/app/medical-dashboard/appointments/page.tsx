@@ -12,11 +12,7 @@ const AppointmentsList = dynamic(() => import("./_components/appointments"), {
 export default function AppointmentsPage() {
   const user = useAuthStore((state) => state.user);
 
-  if (
-    !user?.data?.doctorId ||
-    user?.data?.doctorId === "" ||
-    user?.data?.doctorId === null
-  ) {
+  if (!user?.data?.isDoctorVerified) {
     return (
       <div className="w-full h-[calc(100svh-100px)] flex items-center justify-center">
         <p className="max-w-[350px] text-4xl text-center">

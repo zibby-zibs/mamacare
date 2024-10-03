@@ -29,9 +29,7 @@ const RecentAppointments = (props: Props) => {
         <CardTitle>Recent Appointments</CardTitle>
       </CardHeader>
 
-      {!user?.data?.doctorId ||
-      user?.data?.doctorId === "" ||
-      user?.data?.doctorId === null ? (
+      {!user?.data?.isDoctorVerified ? (
         <CardContent className="text-muted-foreground text-center">
           Your account is not verified yet. Please check back later
         </CardContent>

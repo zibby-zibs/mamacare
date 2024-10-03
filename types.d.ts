@@ -19,6 +19,7 @@ interface UserData {
   image: string | null;
   role: "PRACTITIONER" | "USER";
   expectedDeliveryDate: date | null;
+  isDoctorVerified: boolean;
   createdAt: string;
   updatedAt: string;
 }
