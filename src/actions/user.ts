@@ -1,17 +1,16 @@
 "use server";
 
 import axios from "axios";
-import { cookies } from "next/headers";
+
 import { Appointment, Request } from "../../types";
 
-const cookieStore = cookies();
-export const fetchUserById = async (id: any) => {
+export const fetchUserById = async (id: any, accessToken: string) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/user/${id}`,
       {
         headers: {
-          Authorization: `Bearer ${cookieStore.get("access_token")?.value}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -22,13 +21,13 @@ export const fetchUserById = async (id: any) => {
   }
 };
 
-export const fetchRequests = async () => {
+export const fetchRequests = async (accessToken: string) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}/medic/requests`,
       {
         headers: {
-          Authorization: `Bearer ${cookieStore.get("access_token")?.value}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
@@ -38,13 +37,16 @@ export const fetchRequests = async () => {
     console.log("FETCH_REQUEST_ERROR", error.response.data);
   }
 };
-export const fetchRecentAppointments = async (doctorId: string) => {
+export const fetchRecentAppointments = async (
+  doctorId: string,
+  accessToken: string
+) => {
   try {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_API_URL}//medic/appointments/recent/${doctorId}`,
       {
         headers: {
-          Authorization: `Bearer ${cookieStore.get("access_token")?.value}`,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );
