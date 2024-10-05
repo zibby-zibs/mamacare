@@ -15,6 +15,8 @@ import { Sheet, SheetContent, SheetTrigger } from "../ui/sheet";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuthStore } from "@/store/user";
+import Image from "next/image";
+import { mamaLogo } from "@/images";
 
 const UserSidebar = () => {
   const router = useRouter();
@@ -44,7 +46,13 @@ const UserSidebar = () => {
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-14 items-center border-b px-4 lg:h-[60px] lg:px-6">
             <Link href="/" className="flex items-center gap-2 font-semibold">
-              {/* <Pregnan className="h-6 w-6" /> */}
+              <Image
+                src={mamaLogo}
+                alt="MamaCare"
+                width={32}
+                height={32}
+                className="rounded-full object-contain"
+              />
               <span className="font-fret">
                 Mama <span className="text-primary font-bold">C</span>are
               </span>
@@ -100,6 +108,13 @@ const UserSidebar = () => {
               </Button>
             </SheetTrigger>
             <SheetContent side="left" className="flex flex-col">
+              <Image
+                src={mamaLogo}
+                alt="MamaCare"
+                width={32}
+                height={32}
+                className="rounded-full object-contain pb-10"
+              />
               <nav className="grid gap-2 text-lg font-medium">
                 {links.map((link) => (
                   <Link

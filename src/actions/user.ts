@@ -21,7 +21,7 @@ export const fetchUserById = async (id: any, accessToken: string) => {
     if (error?.response?.status === 401) {
       redirect("/auth/login");
     }
-    console.log("FETCH_SINGLE_USER_ERROR", error.response.data);
+    console.log("FETCH_SINGLE_USER_ERROR", error.response?.data);
   }
 };
 
@@ -41,7 +41,7 @@ export const fetchRequests = async (accessToken: string) => {
     if (error?.response?.status === 401) {
       redirect("/auth/login");
     }
-    console.log("FETCH_REQUEST_ERROR", error.response.data);
+    console.log("FETCH_REQUEST_ERROR", error.response?.data);
   }
 };
 export const fetchRecentAppointments = async (
@@ -63,6 +63,6 @@ export const fetchRecentAppointments = async (
     if (error?.response?.status === 401) {
       redirect("/auth/login");
     }
-    console.log("FETCH_APPOINTMENT_ERROR", error.response.data);
+    console.log("FETCH_APPOINTMENT_ERROR", error.response?.data);
   }
 };

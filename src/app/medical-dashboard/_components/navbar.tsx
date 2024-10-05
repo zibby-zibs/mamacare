@@ -18,6 +18,8 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useAuthStore } from "@/store/user";
+import Image from "next/image";
+import { mamaLogo } from "@/images";
 
 function Navbar() {
   const logout = useAuthStore((state) => state.logout);
@@ -52,7 +54,13 @@ function Navbar() {
           href="#"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          {/* <Package2 className="h-6 w-6" /> */}
+          <Image
+            src={mamaLogo}
+            alt="MamaCare"
+            width={32}
+            height={32}
+            className="rounded-full object-contain"
+          />
           <span className="font-fret">
             Mama <span className="text-primary font-bold">C</span>are
           </span>

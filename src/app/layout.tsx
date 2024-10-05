@@ -3,6 +3,7 @@ import { Outfit, Poppins, Pacifico, Monoton } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
 import ReactQueryWrapper from "@/hooks/react-query-wrapper";
+import ProgressProvider from "@/components/progress-provider";
 
 export const metadata: Metadata = {
   title: "Mama Care",
@@ -39,10 +40,12 @@ export default function RootLayout({
       <body
         className={`${outfit.className} ${poppins.className} ${pacifico.className} ${monoton.className} antialiased !font-poppins`}
       >
-        <ReactQueryWrapper>
-          {children}
-          <Toaster />
-        </ReactQueryWrapper>
+        <ProgressProvider>
+          <ReactQueryWrapper>
+            {children}
+            <Toaster />
+          </ReactQueryWrapper>
+        </ProgressProvider>
       </body>
     </html>
   );

@@ -56,7 +56,7 @@ const Welcome = () => {
           </p>
           <Select onValueChange={setUserType}>
             <SelectTrigger>
-              <SelectValue placeholder="Select user type" />
+              <SelectValue placeholder="Which best describes you?" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="patient">Expectant Mother</SelectItem>
@@ -72,13 +72,15 @@ const Welcome = () => {
       <CardFooter className="flex justify-between">
         <Button
           variant="outline"
-          onClick={() => (window.location.href = "/login")}
+          onClick={() => (window.location.href = "/auth/login")}
         >
           Patient Login
         </Button>
         <Button
           variant="outline"
-          onClick={() => (window.location.href = "/medical-professional/login")}
+          onClick={() =>
+            (window.location.href = "/medical-professional/auth/login")
+          }
         >
           Medical Pro Login
         </Button>

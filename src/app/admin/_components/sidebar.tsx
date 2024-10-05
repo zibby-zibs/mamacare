@@ -24,6 +24,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import { mamaLogo } from "@/images";
 
 type Props = {};
 
@@ -64,7 +66,13 @@ const Sidebar = (props: Props) => {
               href="/admin"
               className="flex items-center gap-2 font-semibold"
             >
-              {/* <Pregnan className="h-6 w-6" /> */}
+              <Image
+                src={mamaLogo}
+                alt="MamaCare"
+                width={32}
+                height={32}
+                className="rounded-full object-contain"
+              />
               <span className="">Admin</span>
             </Link>
             <Button variant="outline" size="icon" className="ml-auto h-8 w-8">

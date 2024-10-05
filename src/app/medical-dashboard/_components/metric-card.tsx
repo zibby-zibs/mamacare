@@ -17,7 +17,7 @@ const MetricCard = (props: Props) => {
   );
 
   useEffect(() => {
-    if (isError && (error as any).response.status === 401) {
+    if (isError && (error as any).response?.status === 401) {
       router.push("/auth/login");
     }
   }, [error, isError]);

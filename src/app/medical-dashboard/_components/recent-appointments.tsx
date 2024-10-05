@@ -16,7 +16,7 @@ const RecentAppointments = (props: Props) => {
   const { data, isPending, error, isError } = useGetRecentAppointments();
 
   useEffect(() => {
-    if (isError && (error as any).response.status === 401) {
+    if (isError && (error as any).response?.status === 401) {
       router.push("/auth/login");
     }
   }, [error, isError]);

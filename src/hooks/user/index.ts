@@ -51,7 +51,7 @@ export const useSignIn = () => {
       return response.data as User;
     },
     onSuccess: (data) => {
-      toast.success("Welcome to mamacare, your guide to a successful delivery");
+      toast.success("Welcome to Mamacare, your guide to a successful delivery");
       setUser(data);
       return router.push("/user-dashboard");
     },

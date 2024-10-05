@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuthStore } from "@/hooks/admin/admin-store";
-import { portrait } from "@/images";
+import { mamaLogo, portrait } from "@/images";
 import { cn } from "@/lib/utils";
 import { useSidebarStore } from "@/store/sidebar";
 import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
@@ -72,6 +72,13 @@ const Header = (props: Props) => {
             </Button>
           </SheetTrigger>
           <SheetContent side="left" className="flex flex-col">
+            <Image
+              src={mamaLogo}
+              alt="MamaCare"
+              width={32}
+              height={32}
+              className="rounded-full object-contain pb-10"
+            />
             <nav className="grid gap-2 text-lg font-medium">
               {routes.map((link) => (
                 <Link
