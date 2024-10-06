@@ -79,7 +79,7 @@ const Welcome = () => {
         <Button
           variant="outline"
           onClick={() =>
-            (window.location.href = "/medical-professional/auth/login")
+            (window.location.href = "/medical-dashboard/auth/login")
           }
         >
           Medical Pro Login
